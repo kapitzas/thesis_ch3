@@ -25,10 +25,11 @@ yrs <- c(1992:2018)[ts]
 # 1. a load clc data and Amazon boundary file
 
 # boundary 
-
+# Data available from https://www.amazoniasocioambiental.org/en/
 boundary <- readOGR(file.path(".", "data", "bnd_ama", "Lim_Biogeografico.shp")) #
 
 # lu 1992-2015
+# data available from https://climate.esa.int/en/
 lu <- stack(file.path(raw_path, "Global", "CLC maps", "ESACCI-LC-L4-LCCS-Map-300m-P1Y-1992_2015-v2.0.7.tif"))
 
 # crop clc data to boundary extent  
@@ -127,6 +128,7 @@ saveRDS(readAll(mask), file.path(data_path, "mask_ama.rds"))
 #-----------------------------#
 
 # load data
+# Data available through https://www.worldclim.org/data/index.html
 biofiles <- list.files(file.path(raw_path, "Global", "wc21_30s_bio"), full.names = TRUE)
 
 # load mask
@@ -144,6 +146,8 @@ for(i in 1:length(biofiles)){
 #--------------------------#
 #### 4. Protected Areas ####
 #--------------------------#
+
+# Protected areas of the world https://www.protectedplanet.net/en/thematic-areas/wdpa?tab=WDPA
 infile <- file.path(raw_path, "Global", "Global Protected Areas", "WDPA_Mar2018-shapefile-polygons.shp")
 outfile <- file.path(temp_path, "PA_cropped.shp")
 crop_shp(infile, outfile, ext = extent(mask))
@@ -163,7 +167,7 @@ for (i in 1:length(years)){
 #------------------#
 #### 4. Terrain ####
 #------------------#
-
+# Data available through https://www.worldclim.org/data/index.html
 mask <- readRDS(file.path(data_path, "mask_ama.rds"))
 infile <-file.path(raw_path, "Global", "wc2.1_30s_elev.tif")
 r <- raster(infile)
@@ -183,6 +187,12 @@ writeRaster(roughness, filename = file.path(temp_path, paste0("roughness_ama.tif
 #--------------------------#
 #### 5. Distance layers ####
 #--------------------------#
+#Data available through:
+#Global road networks: http://sedac.ciesin.columbia.edu/data/set/groads-global-roads-open-access-v1/data-download#openModal
+#Global drainage systems: http://www.soest.hawaii.edu/wessel/gshhg/
+#GLobal built-up areas: http://ref.data.fao.org/map?entryId=c22837d0-88fd-11da-a88f-000d939bc5d8&tab=metadata
+#Global lakes: http://www.soest.hawaii.edu/wessel/gshhg/
+#Protected areas: http://wcmc.io/wdpa_current_release (downloaded Feb 2018)
 
 # Distance to roads
 # We devide the roads feature file into individual distance rasters, one for each road type (they are liekly to have different influence on land use suitability)
@@ -252,7 +262,7 @@ proximity_ras(infile, outfile)
 #----------------#
 #### 6. Soils ####
 #----------------#
-#Full description: https://www.isric.org/explore/soilgrids/faq-soilgrids
+#Data avialable through: https://www.isric.org/explore/soilgrids/faq-soilgrids
 
 # Organic Carbon Density
 infile <- file.path(raw_path, "Global", "soil_data", "ISRIC", "BLDFIE_M_sl3_1km_ll.tif")
